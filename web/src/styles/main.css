@@ -1,0 +1,154 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  /* 内容意外横向溢出时，不要让浏览器把整个布局缩小（移动端 fixed 底栏会因此被裁到屏幕外）。
+     clip 不建立滚动容器，不影响 sticky。 */
+  overflow-x: clip;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #f4f6fb;
+  color: #0f172a;
+}
+
+/* 细滚动条：桌面端列表多，原生粗条太占视觉 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: #cbd5e1;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@layer components {
+  /* ---------- 卡片 ---------- */
+  .card {
+    @apply rounded-2xl border border-slate-200/70 bg-white p-4 shadow-card;
+  }
+  .card-flat {
+    @apply rounded-2xl border border-slate-200/70 bg-white shadow-card;
+  }
+  .card-hover {
+    @apply transition duration-150 hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-md;
+  }
+
+  /* ---------- 按钮 ---------- */
+  .btn-primary {
+    @apply inline-flex h-11 w-full items-center justify-center gap-1.5 rounded-xl bg-brand-500
+           font-medium text-white transition hover:bg-brand-600 active:scale-[0.99] disabled:opacity-60;
+  }
+  .btn {
+    @apply inline-flex h-10 items-center justify-center gap-1.5 rounded-xl px-4 text-sm font-medium
+           transition disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-sm {
+    @apply inline-flex h-8 items-center justify-center gap-1 rounded-lg px-3 text-xs font-medium
+           transition disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-solid {
+    @apply btn bg-brand-500 text-white hover:bg-brand-600 active:scale-[0.99];
+  }
+  .btn-ghost {
+    @apply btn border border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:text-slate-900;
+  }
+  .btn-ghost-sm {
+    @apply btn-sm border border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:text-slate-900;
+  }
+  .btn-text {
+    @apply inline-flex items-center gap-1 text-xs text-slate-400 transition hover:text-brand-600;
+  }
+
+  /* ---------- 表单 ---------- */
+  .field {
+    @apply h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-[15px] outline-none
+           transition focus:border-brand-500 focus:ring-2 focus:ring-brand-100;
+  }
+  .field-label {
+    @apply mb-1.5 block text-xs font-medium text-slate-500;
+  }
+
+  /* ---------- 筛选 chip / 分段控件 ---------- */
+  .chip {
+    @apply inline-flex h-8 shrink-0 items-center rounded-full border px-3 text-xs transition;
+  }
+  .chip-on {
+    @apply border-brand-500 bg-brand-500 text-white;
+  }
+  .chip-off {
+    @apply border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:text-slate-900;
+  }
+  .seg {
+    @apply inline-flex items-center gap-1 rounded-xl bg-slate-100 p-1;
+  }
+  .seg-item {
+    @apply inline-flex h-8 items-center rounded-lg px-3.5 text-[13px] text-slate-500 transition;
+  }
+  .seg-item-on {
+    @apply bg-white font-medium text-slate-900 shadow-sm;
+  }
+
+  /* ---------- 文字 ---------- */
+  .link {
+    @apply text-brand-600 transition hover:underline;
+  }
+  .muted {
+    @apply text-slate-400;
+  }
+  .section-title {
+    @apply text-[15px] font-semibold tracking-tight text-slate-900;
+  }
+
+  /* ---------- 移动端底部导航让位（AppShell 用） ---------- */
+  .has-tabbar {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom));
+  }
+  @media (min-width: 1024px) {
+    .has-tabbar {
+      padding-bottom: 2.5rem;
+    }
+  }
+}
+
+/* 全局提示条（utils/toast.js 直接写内联样式，这里只兜字体） */
+#app-toast {
+  font-family: inherit;
+}
+
+/* 页面切换动画（App.vue 的 <transition name="fade-up">） */
+.fade-up-enter-active {
+  transition:
+    opacity 0.16s ease-out,
+    transform 0.16s ease-out;
+}
+.fade-up-leave-active {
+  transition: opacity 0.1s ease-in;
+}
+.fade-up-enter-from {
+  opacity: 0;
+  transform: translateY(6px);
+}
+.fade-up-leave-to {
+  opacity: 0;
+}
