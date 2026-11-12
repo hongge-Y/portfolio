@@ -1,0 +1,4 @@
+# 本机私有配置（含 LLM 密钥）—— 绝不提交
+src/main/resources/application-local.yml
+target/
+*.log

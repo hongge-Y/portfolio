@@ -1,0 +1,79 @@
+server:
+  port: 8106
+  servlet:
+    context-path: /api
+
+spring:
+  profiles:
+    # local 里放本机密钥（application-local.yml，不提交仓库）；缺文件也能正常启动
+    active: local
+  application:
+    name: portfolio
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3307/portfolio?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false
+    username: root
+    password: ${DB_PASSWORD:123456}   # 本地默认，仓库里用环境变量覆盖
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 10000
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+    default-property-inclusion: non_null
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    # SQL 走 slf4j：默认 StdOutImpl 会把每条 SQL 打到控制台，日志被刷满、AI 调用记录反而看不见
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+  global-config:
+    banner: false
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+portfolio:
+  jwt:
+    secret: ${JWT_SECRET:change-me-in-production-at-least-32-chars}
+    access-ttl: 7200
+  auth:
+    # 本机没有短信/邮件网关：验证码只写日志并随响应回传 demoCode（演示用）
+    # 上线接入真实网关后改成 false，VerifyCodeService 的 send 方法换成短信/邮件 SDK 即可
+    code-demo: true
+  llm:
+    # AI 助手：OpenAI 兼容协议，换后端只改这三行
+    #   百炼  https://dashscope.aliyuncs.com/compatible-mode/v1  + DASHSCOPE_API_KEY
+    #   Ollama http://127.0.0.1:11434/v1 + 任意 key（ollama 不校验）
+    enabled: true
+    base-url: ${LLM_BASE_URL:https://dashscope.aliyuncs.com/compatible-mode/v1}
+    api-key: ${DASHSCOPE_API_KEY:}
+    model: ${LLM_MODEL:qwen-plus}
+    temperature: 0.6
+    max-tokens: 800
+    timeout-seconds: 90
+    rate-limit-per-minute: 20
+  file:
+    upload-dir: ./upload
+    base-url: /static
+  leave:
+    max-in-flight: 3
+    max-days: 7
+    secretary-threshold-days: 3
+  edu:
+    current-term: 2026-2027-1
+    term-start: 2026-09-01
+
+logging:
+  level:
+    root: info
+    com.campus.portfolio: info

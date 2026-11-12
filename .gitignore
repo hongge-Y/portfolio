@@ -1,0 +1,59 @@
+# 构建与依赖
+target/
+node_modules/
+dist/
+.idea/
+*.iml
+
+# 运行时产物
+upload/
+*.log
+bat-test.log
+_bat_backup/
+__pycache__/
+
+# 本机密文（数据库密码 / API Key）
+.env
+server/**/application-local.yml
+
+# 本地评测/登录临时文件（脚本产生的登录态、请求体）
+.login.json
+.tk.json
+.*.json
+!.gitignore
+.tok
+.tok_cou
+c.json
+t.json
+
+# 本机启动脚本（写死了 D:\ 路径，不通用）
+/*.bat
+/_bat_backup/
+/_chkport.bat
+
+# 数据库备份：含真实数据，绝不入库
+_db_backup*.sql
+*.dump
+
+# 内部文档：本机环境、AI 提示词、需求缺口清单，只留本地
+docs/_internal/
+
+# Vite 依赖预构建缓存
+web/.vite/
+
+# AI 评测抽查产物
+docs/eval-ai-advice-rerun.csv
+
+# 一次性迁移脚本 / 依赖 Playwright 的 e2e 与截图脚本：别人 clone 跑不了，只留本地
+scripts/_internal/
+
+# 旧截图（早期用真实账号拍的，已重拍）
+screenshots/_old/
+
+# 重构期本地备份（不入库）
+web/_refactor_backup/
+web/_ts_backup/
+
+# 一键启动脚本输出
+backend.log
+frontend.log
