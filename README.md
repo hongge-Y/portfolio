@@ -5,7 +5,7 @@
 面向高校学工场景的一体化平台：把请假分级审批、奖学金多级评定、家校联动、课表与评教、成长档案（红黑榜）、校园资讯合到一套系统里，覆盖学生、学委、辅导员、书记、教师、家长、管理员七类角色。
 
 技术栈：Spring Boot 3.0.2 + JDK 17 + MyBatis-Plus + MySQL 8 / Vue 3 + Vite + TypeScript + Tailwind。
-规模：7 类角色、43 张表、107 个已实现接口、35 个前端页面（路由 35 条）。
+规模：7 类角色、43 张表、107 个已实现接口、61 个 Vue 组件（40 条前端路由）。
 
 > 说明：数据库连接、JWT 密钥、大模型 Key 全部走环境变量，`clone` 后按下面三步即可跑起来。
 > 需求、设计、接口与权限说明见 `docs/`（从 `docs/00-文档索引.md` 读起）。
@@ -38,7 +38,7 @@ cd web && npm install && npm run dev    # → http://localhost:5173
 
 ```bash
 bash scripts/check-env.sh            # 环境/端口/依赖
-bash scripts/smoke-leave.sh          # 请假闭环 12 项
+bash scripts/smoke-leave.sh          # 请假闭环 13 项
 bash scripts/smoke-scholarship.sh    # 奖学金三级审批 16 项
 bash scripts/smoke-content.sh        # 资讯/消息 19 项
 bash scripts/smoke-relative.sh       # 家长/课表 19 项
@@ -47,7 +47,20 @@ python scripts/eval_ai_advice.py     # AI 审批意见 10 条评测
 bash scripts/reset-demo.sh           # 演示数据复位（默认预演，--apply 才改）
 ```
 
-合计 **66 项业务断言 + 21 项权限断言 + 10 条 AI 评测**，全部有脚本可复跑。
+合计 **67 项业务断言 + 21 项权限断言 + 10 条 AI 评测**，全部有脚本可复跑。断言数可用 `grep -rhoE 'ok "[^"]*"' scripts/smoke-*.sh | wc -l` 现场复算。
+
+## 质量验证
+
+测试资产集中在两处，不是"简历上写测过"，而是能点开看、能一条命令跑：
+
+| 内容 | 位置 |
+|---|---|
+| 测试说明（范围 / 环境 / 怎么跑 / 执行记录 / 已知风险） | [`TESTING.md`](./TESTING.md) |
+| 用例：5 个模块共 93 条，每条挂需求号或接口号 | [`test-cases/`](./test-cases/)（先看索引 `test-cases/README.md`） |
+| 缺陷：8 条明细（P0×2、P1×3），含根因与回归断言 | [`bug-reports/`](./bug-reports/)（先看统计 `bug-reports/README.md`） |
+
+缺陷里最值得说的一条：**列表接口做了行级范围收口，详情接口漏了**——外院辅导员按 id 能翻到别院学生的请假理由与附件（`BUG-003`），奖学金申请详情同源同修。修完固化成 21 条权限断言，跑一次 20 秒。
+
 
 ## 演示账号（密码均 `123456`）
 
